@@ -1,3 +1,5 @@
+#define _CRT_SECURE_NO_WARNINGS
+
 #include <cadex/Base_ProgressScope.hxx>
 #include <cadex/LicenseManager_Activate.h>
 #include <cadex/ModelData_Body.hxx>
@@ -74,12 +76,14 @@ void RecursVR(ModelData_SceneGraphElement SGE, std::list<ModelData_Part>* result
 	
 	ModelData_Model::ElementIterator MI(SGE);
 	while (MI.HasNext()) {
-		const ModelData_SceneGraphElement & aSGE = MI.Next();
-		if (aSGE.TypeId() == ModelData_Assembly::GetTypeId())
-			RecursVR(aSGE,result);
+		
+		ModelData_SceneGraphElement & aSGE = MI.Next();
+		if (aSGE.TypeId() == ModelData_Assembly::GetTypeId()) {
+			RecursVR(aSGE, result);
+		}			
 		if (aSGE.TypeId() == ModelData_Instance::GetTypeId()) {
 			const ModelData_Instance & MDI = static_cast <const ModelData_Instance &> (aSGE);
-			RecursVR(MDI.Reference(),result);
+			RecursVR(MDI,result);
 		}
 		if (aSGE.TypeId() == ModelData_Part::GetTypeId()) {
 			const ModelData_Part & MDI = static_cast <const ModelData_Part &> (aSGE);
@@ -90,10 +94,8 @@ void RecursVR(ModelData_SceneGraphElement SGE, std::list<ModelData_Part>* result
 };
 
 
-	int main(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
-	
-
 	if (argc != 3) {
 		cerr << "Usage: " << argv[0] << " <input_file> <output_file>, where:" << endl;
 		cerr << "    <input_file>  is a name of the STEP file to be read" << endl;
@@ -110,19 +112,31 @@ void RecursVR(ModelData_SceneGraphElement SGE, std::list<ModelData_Part>* result
 	ModelData_Model aModel;
 	cout << "Conversion started..." << endl;
 	STEP_Reader aReader;
-	if (!aReader.ReadFile(aSource) || !aReader.Transfer(aModel)) {
+	bool flag1 = !aReader.ReadFile(aSource);
+	bool flag2 = !aReader.Transfer(aModel);
+	if (flag1 || flag2) {
 		cerr << "Failed to read the file " << aSource << endl;
 		return 1;
 	}
+	
+	cout << flag1 << " " << flag2 << endl;
 
 	// import file
 	std::list<ModelData_Part> MDP_List;
 
 	ModelData_Model::ElementIterator anIterator(aModel);
-	while (anIterator.HasNext()) {
+	if (anIterator.HasNext()) {
 		const ModelData_SceneGraphElement& aSGE = anIterator.Next();
-		RecursVR(aSGE,&MDP_List);
+		RecursVR(aSGE, &MDP_List);
 	}
+
+	cout << MDP_List.size() << endl;
+	int i = 0;
+	for (auto iter = MDP_List.begin(); iter != MDP_List.end(); iter++) {
+		i++;
+		cout << i << " ";
+	}
+
 	// part list completed
 
 	ModelAlgo_BRepMesherParameters aParam;
@@ -134,33 +148,31 @@ void RecursVR(ModelData_SceneGraphElement SGE, std::list<ModelData_Part>* result
 	ModelAlgo_BRepMesher aMesher(aParam);
 	ModelData_BRepRepresentation aBRep;
 	ModelData_PolyRepresentation aPoly;
-
 	ModelData_Model nMod;
 
 	Para_Writer aWriter;
 	bool res;
-	int k = 0;
-	char aDest[10];
-	string str = "Part 0.stp";
-	for (int i = 0; i < 10; i++) {
-		aDest[i] = str[i];
-	}
+	int k = 'a';
+	char* aDest = new char[12];
+	strcpy(aDest, "p/Part_0.stp");
+	
 	Base_UTF16String* UTFStr;
 	
 	for (auto iter = MDP_List.begin(); iter != MDP_List.end(); iter++) {
 		aBRep = iter->BRepRepresentation();
 		aPoly = aMesher.Compute(aBRep);
-		ModelData_Part Npart(aPoly);
+		ModelData_Part Npart(aPoly);		
 		nMod.AddRoot(Npart);
 
-		aDest[5] = static_cast<char> (k);
+		aDest[7] = static_cast<char> (k);
+		for (int i = 0; i < 12; i++)
+			cout << aDest[i];
+		cout << endl;
 		UTFStr = new Base_UTF16String(aDest);
-		cout << UTFStr << endl;
-		if (res = aWriter.Transfer(aModel) && aWriter.WriteFile(*UTFStr)){
+		if (!aWriter.Transfer(aModel) || !aWriter.WriteFile(*UTFStr)){
 			return 1;
 		}
 		k++;
-		MDP_List.pop_front();
 	}
 
 	cout << "Done" << endl;
