@@ -26,7 +26,7 @@
 #include <cadex/ModelData_Assembly.hxx>
 #include <cadex/ModelData_Part.hxx>
 
-#include <cadex/Para_Writer.hxx>
+#include <cadex/STL_Writer.hxx>
 
 #include <iostream>
 #include "cadex_license_4.cxx"
@@ -72,7 +72,7 @@ public:
 	}
 };
 
-void RecursVR(ModelData_SceneGraphElement SGE, std::list<ModelData_Part>* result) {
+void RecursVR(ModelData_SceneGraphElement &SGE, std::list<ModelData_Part*>* result) {
 	
 	ModelData_Model::ElementIterator MI(SGE);
 	while (MI.HasNext()) {
@@ -82,12 +82,12 @@ void RecursVR(ModelData_SceneGraphElement SGE, std::list<ModelData_Part>* result
 			RecursVR(aSGE, result);
 		}			
 		if (aSGE.TypeId() == ModelData_Instance::GetTypeId()) {
-			const ModelData_Instance & MDI = static_cast <const ModelData_Instance &> (aSGE);
+			ModelData_Instance & MDI = static_cast <ModelData_Instance &> (aSGE);
 			RecursVR(MDI,result);
 		}
 		if (aSGE.TypeId() == ModelData_Part::GetTypeId()) {
-			const ModelData_Part & MDI = static_cast <const ModelData_Part &> (aSGE);
-			result->push_back(MDI);
+			ModelData_Part & MDI = static_cast <ModelData_Part &> (aSGE);
+			result->push_back(&MDI);
 		}
 	}
 
@@ -122,11 +122,11 @@ int main(int argc, char *argv[])
 	cout << flag1 << " " << flag2 << endl;
 
 	// import file
-	std::list<ModelData_Part> MDP_List;
+	std::list<ModelData_Part*> MDP_List;
 
 	ModelData_Model::ElementIterator anIterator(aModel);
 	if (anIterator.HasNext()) {
-		const ModelData_SceneGraphElement& aSGE = anIterator.Next();
+		ModelData_SceneGraphElement& aSGE = anIterator.Next();
 		RecursVR(aSGE, &MDP_List);
 	}
 
@@ -145,23 +145,24 @@ int main(int argc, char *argv[])
 	aP.SetGranularity(MeshAlgo_NetgenFactory::Parameters::Fine);
 	aMF.SetParameters(aP);
 	aParam.ComputationalMeshAlgo() = aMF;
-	ModelAlgo_BRepMesher aMesher(aParam);
-	ModelData_BRepRepresentation aBRep;
-	ModelData_PolyRepresentation aPoly;
-	ModelData_Model nMod;
 
-	Para_Writer aWriter;
-	bool res;
+	ModelAlgo_BRepMesher aMesher(aParam);
+
+	
+
+	STL_Writer aWriter;
 	int k = 'a';
 	char* aDest = new char[12];
-	strcpy(aDest, "p/Part_0.stp");
+	strcpy(aDest, "p/Part_0.stl");
 	
 	Base_UTF16String* UTFStr;
 	
 	for (auto iter = MDP_List.begin(); iter != MDP_List.end(); iter++) {
-		aBRep = iter->BRepRepresentation();
-		aPoly = aMesher.Compute(aBRep);
+
+		ModelData_BRepRepresentation aBRep = (*iter)->BRepRepresentation();
+		ModelData_PolyRepresentation aPoly(aBRep);
 		ModelData_Part Npart(aPoly);		
+		ModelData_Model nMod;
 		nMod.AddRoot(Npart);
 
 		aDest[7] = static_cast<char> (k);
@@ -169,7 +170,7 @@ int main(int argc, char *argv[])
 			cout << aDest[i];
 		cout << endl;
 		UTFStr = new Base_UTF16String(aDest);
-		if (!aWriter.Transfer(aModel) || !aWriter.WriteFile(*UTFStr)){
+		if (!aWriter.Transfer(nMod) || !aWriter.WriteFile(*UTFStr)){
 			return 1;
 		}
 		k++;
