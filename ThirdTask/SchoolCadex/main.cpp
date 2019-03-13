@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
 	MyVisitor MyV;
 
 	ModelData_Model::ElementIterator anIterator(aModel);
-	if (anIterator.HasNext()) {
+	while (anIterator.HasNext()) {
 		ModelData_SceneGraphElement& aSGE = anIterator.Next();
 		aSGE.Accept(MyV);
 	}

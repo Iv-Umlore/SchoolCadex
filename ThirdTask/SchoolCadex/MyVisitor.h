@@ -67,59 +67,29 @@ public:
 		ModelData_Model nMod;
 		nMod.AddRoot(Npart);
 
-
-
 		if (!aWriter.Transfer(nMod) || !aWriter.WriteFile(*UTFStr)) {
 			cout << "Error in writing\n";
 		}
-		else cout << "New file created!\n";
+		else cout << " New file created!\n";
 		k++;
 		aDest[7] = k;
 
 	}
+	 
 	bool VisitEnter(const ModelData_Assembly& theAssembly) {
-		cout << "Enter in Assambly\n";
-
-		ModelData_Model::ElementIterator MI(theAssembly);
-		while (MI.HasNext()) {
-			ModelData_SceneGraphElement & aSGE = MI.Next();
-			aSGE.Accept(*this);
-		}
-
+		//cout << "Enter in Assambly\n";
+		
 		return true;
 	}
 	void VisitLeave(const ModelData_Assembly& theAssembly) {
-		cout << "Exit from Assembly\n";
+		//cout << "Exit from Assembly\n";
 	}
 	bool VisitEnter(const ModelData_Instance& theInstance) {
-		cout << "Enter in Instance\n";
-
-		ModelData_Model::ElementIterator MI(theInstance);
-		while (MI.HasNext()) {
-			ModelData_SceneGraphElement & aSGE = MI.Next();
-			aSGE.Accept(*this);
-		}
+		//cout << "Enter in Instance\n";
 
 		return true;
 	}
 	void VisitLeave(const ModelData_Instance& theInstance) {
-		cout << "Exit from Instance\n";
+		//cout << "Exit from Instance\n";
 	}
 };
-
-/*ModelData_Model::ElementIterator MI(SGE);
-	while (MI.HasNext()) {
-		
-		ModelData_SceneGraphElement & aSGE = MI.Next();
-		if (aSGE.TypeId() == ModelData_Assembly::GetTypeId()) {
-			RecursVR(aSGE, result);
-		}			
-		if (aSGE.TypeId() == ModelData_Instance::GetTypeId()) {
-			ModelData_Instance & MDI = static_cast <ModelData_Instance &> (aSGE);
-			RecursVR(MDI,result);
-		}
-		if (aSGE.TypeId() == ModelData_Part::GetTypeId()) {
-			ModelData_Part & MDI = static_cast <ModelData_Part &> (aSGE);
-			result->push_back(&MDI);
-		}
-	}*/
