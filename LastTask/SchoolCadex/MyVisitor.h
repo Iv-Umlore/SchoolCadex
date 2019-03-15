@@ -38,7 +38,7 @@ using namespace std;
 string ToString(wstring wstr) {
 	string result = "";
 	for (auto iterator = 0; iterator < wstr.length(); iterator++) {
-		result += wstr.at(iterator);
+		result += static_cast<char>(wstr.at(iterator));
 		// One of more problems
 	}
 	return result;

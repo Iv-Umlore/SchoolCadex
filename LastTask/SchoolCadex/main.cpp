@@ -55,6 +55,9 @@ int main(int argc, char *argv[])
 		cerr << "Sorry, open Error!" << endl;
 		return 1;
 	}
+
+	/*
+
 	SingletonReader* SReader = SingletonReader::Create();
 	SReader->SetIfstream(in);
 	
@@ -72,8 +75,8 @@ int main(int argc, char *argv[])
 		cerr << "Last stage error!\n";
 		return 1;
 	}
-	
-	cout << "Done" << endl;
+	*/
+	cout << "\n\nDone" << endl;
 
 	
 

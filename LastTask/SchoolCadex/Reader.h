@@ -30,7 +30,6 @@
 #include "SingletonFile.h"
 
 cadex::Base_UTF16String StrToUTF(string str) {
-	cout << "\n\nI convert string\n";
 	auto Cstr = static_cast<char*>(new char[str.length()]);
 	for (int i = 0; i < str.length(); i++) 
 		Cstr[i] = str[i];
@@ -39,12 +38,11 @@ cadex::Base_UTF16String StrToUTF(string str) {
 		cout << Cstr[i];
 	}
 
-	cout << "\n\n";
 	return Base_UTF16String(Cstr);
 }
 
 cadex::ModelData_SceneGraphElement ReadFromFile() {
-	//cout << "I read from file\n";
+
 	cadex::ModelData_SceneGraphElement Result;
 	ifstream& in = SingletonReader::Create()->ReturnIfstream();
 
@@ -61,7 +59,7 @@ cadex::ModelData_SceneGraphElement ReadFromFile() {
 		cout << type << " " << name << " " << numberOfSubSGE << endl;
 		cadex::ModelData_Assembly thatAssamble(StrToUTF(name));
 		
-		for (int i = 0; i < numberOfSubSGE; i++)
+		for (int i = 0; i <= numberOfSubSGE; i++)
 			thatAssamble.AddInstance(ReadFromFile());
 
 		// some code
