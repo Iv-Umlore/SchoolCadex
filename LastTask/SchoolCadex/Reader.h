@@ -28,18 +28,25 @@
 
 #include <iostream>
 #include "SingletonFile.h"
+#include "MyVisitor.h"
+
+const bool All_Write = false;
+const bool Assamble_Write = false;
+const bool Instance_Write = false;
+const bool Part_Write = false;
 
 cadex::Base_UTF16String StrToUTF(string str) {
-	auto Cstr = static_cast<char*>(new char[str.length()]);
-	for (int i = 0; i < str.length(); i++) 
-		Cstr[i] = str[i];
-
+	wstring Cstr;
+	Cstr.resize(str.length());
 	for (int i = 0; i < str.length(); i++) {
-		cout << Cstr[i];
+		Cstr[i] = static_cast<wchar_t>(str[i]);
 	}
 
-	return Base_UTF16String(Cstr);
+	Base_UTF16String res(Cstr);
+
+	return res;
 }
+
 
 cadex::ModelData_SceneGraphElement ReadFromFile() {
 
@@ -48,43 +55,48 @@ cadex::ModelData_SceneGraphElement ReadFromFile() {
 
 	// read parameters
 	int type;
-	in >> type;
 	string name;
 	int numberOfSubSGE;
-	in >> name >> numberOfSubSGE;
+	in >> type >> name >> numberOfSubSGE;
 	
+	if (All_Write) cout << type << " " << name << " " << numberOfSubSGE << endl;
+
 	switch (type) {
 	case 1: {
-		
-		cout << type << " " << name << " " << numberOfSubSGE << endl;
+		if (Assamble_Write) cout << type << " " << name << " " << numberOfSubSGE << endl;
 		cadex::ModelData_Assembly thatAssamble(StrToUTF(name));
-		
-		for (int i = 0; i <= numberOfSubSGE; i++)
-			thatAssamble.AddInstance(ReadFromFile());
-
+		for (int i = 0; i < numberOfSubSGE; i++) {
+			cadex::ModelData_SceneGraphElement SGE = ReadFromFile();
+			thatAssamble.AddInstance(SGE, SGE.Name());
+			
+			//cout << name << ": " << i << endl;
+		}
 		// some code
+		cout << name << ": " << thatAssamble.NumberOfInstances() << endl;
 		Result = static_cast<ModelData_SceneGraphElement> (thatAssamble);
 		
 		break;
 	}
 	case 2: {
-
-		cout << type << " " << name << " " << numberOfSubSGE << endl;
-		cadex::ModelData_Instance thatInstance(ReadFromFile(), StrToUTF(name));		
+		/*if (Instance_Write) cout << type << " " << name << " " << numberOfSubSGE << endl;
+		cadex::ModelData_SceneGraphElement Elem = ReadFromFile();
+		cadex::ModelData_Instance thatInstance(Elem,Elem.Name());		
 		// some code
 		Result = static_cast<ModelData_SceneGraphElement> (thatInstance);
 
-		break;
+		break;*/
 	}
 	case 3: {
-
-
-		cout << type << " " << name << " " << numberOfSubSGE << endl;
+		if (Part_Write) cout << type << " " << name << " " << numberOfSubSGE << endl;
 		cadex::ModelData_Assembly thatPart(StrToUTF(name));
 
 		Result = static_cast<ModelData_SceneGraphElement> (thatPart);
 		break;
 		}
+	default: {
+		cerr << "Attention, i have a problem!!!";
+		break;
+	}
 	}
 	
 

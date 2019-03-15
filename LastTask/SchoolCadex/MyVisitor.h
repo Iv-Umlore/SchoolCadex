@@ -77,10 +77,9 @@ public:
 		
 	}
 	bool VisitEnter(const ModelData_Instance& theInstance) {
-		
-		ofstream& out = SingletonWriter::Create()->ReturnOstream();
+	/*	ofstream& out = SingletonWriter::Create()->ReturnOstream();
 		out << "2 Instance 1 ";
-
+		*/
 		return true;
 	}
 	void VisitLeave(const ModelData_Instance& theInstance) {
