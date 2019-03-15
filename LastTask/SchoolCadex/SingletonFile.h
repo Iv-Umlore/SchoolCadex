@@ -24,3 +24,24 @@ public:
 		return *FOut;
 	}
 };
+
+class SingletonReader {
+private:
+	//static SingletonWriter *ptr;
+	std::ifstream* FOut;
+
+	SingletonReader() {}
+public:
+	static SingletonReader* Create() {
+		static SingletonReader instance;
+		return &instance;
+	}
+
+	void SetIfstream(std::ifstream & MyOut) {
+		FOut = &MyOut;
+	}
+
+	std::ifstream& ReturnIfstream() {
+		return *FOut;
+	}
+};

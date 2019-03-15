@@ -79,7 +79,7 @@ public:
 	bool VisitEnter(const ModelData_Instance& theInstance) {
 		
 		ofstream& out = SingletonWriter::Create()->ReturnOstream();
-		out << "2 " << ToString(theInstance.Name().ToWString()) << " 1 " ;
+		out << "2 Instance 1 ";
 
 		return true;
 	}

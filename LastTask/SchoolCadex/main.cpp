@@ -1,5 +1,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 
+#include <cadex/STEP_Writer.hxx>
+
 #include "MyVisitor.h"
 #include "cadex_license_4.cxx"
 #include "Reader.h"
@@ -30,6 +32,10 @@ int main(int argc, char *argv[])
 	// create output file. One for ALL
 	ofstream out;
 	out.open("p\\file.txt");
+	if (!out.is_open()) {
+		cerr << "Sorry, open Error!" << endl;
+		return 1;
+	}
 	SingletonWriter* SWriter = SingletonWriter::Create();
 	SWriter->SetOstream(out);
 	
@@ -40,18 +46,35 @@ int main(int argc, char *argv[])
 		ModelData_SceneGraphElement& aSGE = anIterator.Next();
 		aSGE.Accept(MyV);
 	}
-		
+	// close output file.
 	out.close();
 
-	//ModelData_Model resultMod = ReadFromFile();
-
+	ifstream in;
+	in.open("p\\file.txt");
+	if (!in.is_open()) {
+		cerr << "Sorry, open Error!" << endl;
+		return 1;
+	}
+	SingletonReader* SReader = SingletonReader::Create();
+	SReader->SetIfstream(in);
 	
+	ModelData_SceneGraphElement resSGE = ReadFromFile();
+	ModelData_Model resMod;
+	resMod.AddRoot(resSGE);
+
+	// close input file.
+	in.close();
 
 	// запись в файл
-
+	STEP_Writer STPWrite;
+	Base_UTF16String file("p\\result.stp");
+	if (!STPWrite.Transfer(resMod) || !STPWrite.WriteFile(file)) {
+		cerr << "Last stage error!\n";
+		return 1;
+	}
+	
 	cout << "Done" << endl;
 
-	// close output file.
 	
 
 	return 0;
