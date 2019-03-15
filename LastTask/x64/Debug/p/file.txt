@@ -1,0 +1,1 @@
+1 as1 4 1 rod-assembly 3 3 nut 0 3 nut 0 3 rod 0 1 l-bracket-assembly 4 1 nut-bolt-assembly 2 3 bolt 0 3 nut 0 1 nut-bolt-assembly 2 3 bolt 0 3 nut 0 1 nut-bolt-assembly 2 3 bolt 0 3 nut 0 3 l-bracket 0 3 plate 0 1 l-bracket-assembly 4 1 nut-bolt-assembly 2 3 bolt 0 3 nut 0 1 nut-bolt-assembly 2 3 bolt 0 3 nut 0 1 nut-bolt-assembly 2 3 bolt 0 3 nut 0 3 l-bracket 0 
