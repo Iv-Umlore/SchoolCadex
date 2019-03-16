@@ -58,7 +58,7 @@ cadex::ModelData_SceneGraphElement ReadFromFile() {
 	// read parameters
 	int type;
 	string name;
-	int numberOfSubSGE; // ÑÓÊÀ, ÊÒÎ ÍÀÇÛÂÀÅÒ ÄÅÒÀËÜ ×ÅÐÅÇ ÏÐÎÁÅË?
+	int numberOfSubSGE;
 	in >> type >> name >> numberOfSubSGE;
 	
 	if (All_Write) cout << endl << type << " " << name << " " << numberOfSubSGE << endl;
