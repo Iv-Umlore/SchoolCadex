@@ -30,7 +30,7 @@
 #include "SingletonFile.h"
 #include "MyVisitor.h"
 
-const bool All_Write = false;
+const bool All_Write = true;
 const bool Assamble_Write = false;
 const bool Instance_Write = false;
 const bool Part_Write = false;
@@ -60,45 +60,45 @@ cadex::ModelData_SceneGraphElement ReadFromFile() {
 	in >> type >> name >> numberOfSubSGE;
 	
 	if (All_Write) cout << type << " " << name << " " << numberOfSubSGE << endl;
-
+	
 	switch (type) {
 	case 1: {
 		if (Assamble_Write) cout << type << " " << name << " " << numberOfSubSGE << endl;
 		cadex::ModelData_Assembly thatAssamble(StrToUTF(name));
 		for (int i = 0; i < numberOfSubSGE; i++) {
-			cadex::ModelData_SceneGraphElement SGE = ReadFromFile();
-			thatAssamble.AddInstance(SGE, SGE.Name());
+			cadex::ModelData_SceneGraphElement SGE = ReadFromFile();		
 			
-			//cout << name << ": " << i << endl;
+			thatAssamble.AddInstance(ReadFromFile());
+			
 		}
 		// some code
 		cout << name << ": " << thatAssamble.NumberOfInstances() << endl;
-		Result = static_cast<ModelData_SceneGraphElement> (thatAssamble);
+		Result = thatAssamble;
 		
 		break;
 	}
 	case 2: {
-		/*if (Instance_Write) cout << type << " " << name << " " << numberOfSubSGE << endl;
+		if (Instance_Write) cout << type << " " << name << " " << numberOfSubSGE << endl;
 		cadex::ModelData_SceneGraphElement Elem = ReadFromFile();
 		cadex::ModelData_Instance thatInstance(Elem,Elem.Name());		
 		// some code
-		Result = static_cast<ModelData_SceneGraphElement> (thatInstance);
+		Result = thatInstance;
 
-		break;*/
+		break;
 	}
 	case 3: {
 		if (Part_Write) cout << type << " " << name << " " << numberOfSubSGE << endl;
-		cadex::ModelData_Assembly thatPart(StrToUTF(name));
+		cadex::ModelData_Part thatPart(StrToUTF(name));
 
-		Result = static_cast<ModelData_SceneGraphElement> (thatPart);
+		Result = thatPart;
 		break;
 		}
 	default: {
-		cerr << "Attention, i have a problem!!!";
+		cerr << "Attention, i have a problem!!!\n";
 		break;
 	}
 	}
 	
 
-	return static_cast<ModelData_SceneGraphElement>(Result);
+	return Result;
 }
