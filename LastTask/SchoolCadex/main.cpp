@@ -82,14 +82,14 @@ int main(int argc, char *argv[])
 		ModelData_SceneGraphElement resSGE = ReadFromFile();
 		resMod.AddRoot(resSGE);
 	}
-	
+	/*
 	ModelData_Model::ElementIterator LastIterator(resMod);
 	while (LastIterator.HasNext()) {
 		cout << endl << endl << "Next Root:" << endl << endl;
 		ModelData_SceneGraphElement& aSGE = LastIterator.Next();
 		aSGE.Accept(TV);		
 	}
-
+	*/
 	// close input file.
 	in.close();
 

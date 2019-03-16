@@ -81,7 +81,7 @@ public:
 		}
 		ofstream& out = SingletonWriter::Create()->ReturnOstream();
 		out << "1 " << name << " " << count << " ";
-		cout << "1 " << name << " " << count << " ";
+		//cout << "1 " << name << " " << count << " ";
 		return true;
 	}
 	void VisitLeave(const ModelData_Assembly& theAssembly) {
@@ -89,8 +89,14 @@ public:
 	}
 	bool VisitEnter(const ModelData_Instance& theInstance) {
 		ofstream& out = SingletonWriter::Create()->ReturnOstream();
-		out << "2 Instance 1 ";
-		cout << "2 Instance 1 ";
+
+		string name = ToString(theInstance.Name().ToWString());
+		if (name.size() == 0) {
+			name = "Instance";
+		}
+
+		out << "2 "<< name << " 1 ";
+		cout << "2 " << name << " 1 ";
 		return true;
 	}
 	void VisitLeave(const ModelData_Instance& theInstance) {

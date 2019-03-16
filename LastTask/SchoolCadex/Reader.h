@@ -82,7 +82,9 @@ cadex::ModelData_SceneGraphElement ReadFromFile() {
 	case 2: {
 		if (Instance_Write) cout << type << " " << name << " " << numberOfSubSGE << endl;
 		cadex::ModelData_SceneGraphElement Elem = ReadFromFile();
-		cadex::ModelData_Instance thatInstance(Elem,Elem.Name());	
+		string instance = "Instance";
+		if (name == instance) name = ToString(Elem.Name().ToWString());
+		cadex::ModelData_Instance thatInstance(Elem,StrToUTF(name));	
 		// cout << Elem.TypeId() << endl;
 		// some code
 		Result = thatInstance;
