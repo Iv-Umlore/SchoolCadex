@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
 	ModelData_Model aModel;
 	cout << "Conversion started..." << endl;
 	IFC_Reader aReader;
-	// STEP_Reader aReader;
+	//STEP_Reader aReader;
 	bool flag1 = !aReader.ReadFile(aSource);
 	bool flag2 = !aReader.Transfer(aModel);
 	if (flag1 || flag2) {
@@ -41,9 +41,6 @@ int main(int argc, char *argv[])
 	SingletonWriter* SWriter = SingletonWriter::Create();
 	SWriter->SetOstream(out);
 	
-	// Если будет несколько Root, то у меня ломается код, он будет собирать лишь один Root
-
-
 	MyVisitor MyV;
 	int count = 0;
 	ModelData_Model::ElementIterator FirstIterator(aModel);

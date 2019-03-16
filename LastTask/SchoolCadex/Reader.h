@@ -32,8 +32,8 @@
 #include "SingletonFile.h"
 #include "MyVisitor.h"
 
-const bool All_Write = true;
-const bool Assamble_Write = false;
+const bool All_Write = false;
+const bool Assamble_Write = true;
 const bool Instance_Write = false;
 const bool Part_Write = false;
 
@@ -58,7 +58,7 @@ cadex::ModelData_SceneGraphElement ReadFromFile() {
 	// read parameters
 	int type;
 	string name;
-	int numberOfSubSGE;
+	int numberOfSubSGE; // ÑÓÊÀ, ÊÒÎ ÍÀÇÛÂÀÅÒ ÄÅÒÀËÜ ×ÅÐÅÇ ÏÐÎÁÅË?
 	in >> type >> name >> numberOfSubSGE;
 	
 	if (All_Write) cout << endl << type << " " << name << " " << numberOfSubSGE << endl;
@@ -102,7 +102,7 @@ cadex::ModelData_SceneGraphElement ReadFromFile() {
 		}
 	default: {
 		cerr << "Attention, i have a problem!!!\n";
-		cout << type;
+		cout << type << endl;
 		break;
 	}
 	}	

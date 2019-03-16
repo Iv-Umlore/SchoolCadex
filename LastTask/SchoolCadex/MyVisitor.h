@@ -38,7 +38,8 @@ using namespace std;
 string ToString(wstring wstr) {
 	string result = "";
 	for (auto iterator = 0; iterator < wstr.length(); iterator++) {
-		result += static_cast<char>(wstr.at(iterator));
+		if (static_cast<char>(wstr.at(iterator)) == ' ') result += '_';
+		else result += static_cast<char>(wstr.at(iterator));
 		// One of more problems
 	}
 	return result;
