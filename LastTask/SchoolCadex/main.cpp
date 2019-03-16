@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
 	SWriter->SetOstream(out);
 	
 	MyVisitor MyV;
-
+	// write model
 	ModelData_Model::ElementIterator anIterator(aModel);
 	while (anIterator.HasNext()) {
 		ModelData_SceneGraphElement& aSGE = anIterator.Next();
@@ -55,11 +55,18 @@ int main(int argc, char *argv[])
 		cerr << "Sorry, open Error!" << endl;
 		return 1;
 	}
-	
+	/*
+	cout << ModelData_Assembly::GetTypeId() << " - Assembly" << endl;
+	cout << ModelData_Instance::GetTypeId() << " - Instance" << endl;
+	cout << ModelData_Part::GetTypeId() << " - Part" << endl;*/
+
 	SingletonReader* SReader = SingletonReader::Create();
 	SReader->SetIfstream(in);
-	
+
+	TestVisitor TV;
+
 	ModelData_SceneGraphElement resSGE = ReadFromFile();
+	resSGE.Accept(TV);
 	ModelData_Model resMod;
 	resMod.AddRoot(resSGE);
 

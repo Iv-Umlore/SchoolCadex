@@ -30,7 +30,7 @@
 #include "SingletonFile.h"
 #include "MyVisitor.h"
 
-const bool All_Write = true;
+const bool All_Write = false;
 const bool Assamble_Write = false;
 const bool Instance_Write = false;
 const bool Part_Write = false;
@@ -67,12 +67,12 @@ cadex::ModelData_SceneGraphElement ReadFromFile() {
 		cadex::ModelData_Assembly thatAssamble(StrToUTF(name));
 		for (int i = 0; i < numberOfSubSGE; i++) {
 			cadex::ModelData_SceneGraphElement SGE = ReadFromFile();		
-			
-			thatAssamble.AddInstance(ReadFromFile());
+			//cout << SGE.TypeId() << endl;
+			thatAssamble.AddInstance(SGE);
 			
 		}
 		// some code
-		cout << name << ": " << thatAssamble.NumberOfInstances() << endl;
+		// cout << name << ": " << thatAssamble.NumberOfInstances() << endl;
 		Result = thatAssamble;
 		
 		break;
@@ -80,7 +80,8 @@ cadex::ModelData_SceneGraphElement ReadFromFile() {
 	case 2: {
 		if (Instance_Write) cout << type << " " << name << " " << numberOfSubSGE << endl;
 		cadex::ModelData_SceneGraphElement Elem = ReadFromFile();
-		cadex::ModelData_Instance thatInstance(Elem,Elem.Name());		
+		cadex::ModelData_Instance thatInstance(Elem,Elem.Name());	
+		// cout << Elem.TypeId() << endl;
 		// some code
 		Result = thatInstance;
 
@@ -97,8 +98,7 @@ cadex::ModelData_SceneGraphElement ReadFromFile() {
 		cerr << "Attention, i have a problem!!!\n";
 		break;
 	}
-	}
-	
+	}	
 
 	return Result;
 }

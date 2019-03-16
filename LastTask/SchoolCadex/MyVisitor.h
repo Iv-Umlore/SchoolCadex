@@ -77,12 +77,36 @@ public:
 		
 	}
 	bool VisitEnter(const ModelData_Instance& theInstance) {
-	/*	ofstream& out = SingletonWriter::Create()->ReturnOstream();
+		ofstream& out = SingletonWriter::Create()->ReturnOstream();
 		out << "2 Instance 1 ";
-		*/
+		
 		return true;
 	}
 	void VisitLeave(const ModelData_Instance& theInstance) {
 		
+	}
+};
+
+class TestVisitor : public ModelData_Model::ElementVisitor {
+public:
+	TestVisitor() {};
+
+	void operator() (const ModelData_Part& thePart) {
+		cout << "It's Part: " << ToString(thePart.Name().ToWString()) << endl;
+	}
+
+	bool VisitEnter(const ModelData_Assembly& theAssembly) {
+		cout << "It's Assembly: " << ToString(theAssembly.Name().ToWString()) << endl;
+		return true;
+	}
+	void VisitLeave(const ModelData_Assembly& theAssembly) {
+
+	}
+	bool VisitEnter(const ModelData_Instance& theInstance) {
+		cout << "It's Instance: " << ToString(theInstance.Name().ToWString()) << endl;
+		return true;
+	}
+	void VisitLeave(const ModelData_Instance& theInstance) {
+
 	}
 };
