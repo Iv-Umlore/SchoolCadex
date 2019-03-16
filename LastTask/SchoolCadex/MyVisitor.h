@@ -26,7 +26,7 @@
 #include <cadex/ModelData_Assembly.hxx>
 #include <cadex/ModelData_Part.hxx>
 
-#include <cadex/STL_Writer.hxx>
+#include <cadex/ModelData_Model.hxx>
 #include <iostream>
 #include <fstream>
 
@@ -96,7 +96,15 @@ public:
 	}
 
 	bool VisitEnter(const ModelData_Assembly& theAssembly) {
-		cout << "It's Assembly: " << ToString(theAssembly.Name().ToWString()) << endl;
+		cout << "It's Assembly: " << ToString(theAssembly.Name().ToWString());
+		ModelData_Model::ElementIterator EI(theAssembly);
+		int count = 0;
+		while (EI.HasNext()) {
+			count++;
+			EI.Next();
+		}
+		cout << " his SubSGEcount: " << count << endl;
+
 		return true;
 	}
 	void VisitLeave(const ModelData_Assembly& theAssembly) {
