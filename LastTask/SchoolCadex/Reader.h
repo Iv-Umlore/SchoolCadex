@@ -33,19 +33,18 @@
 #include "MyVisitor.h"
 
 const bool All_Write = false;
-const bool Assamble_Write = true;
+const bool Assamble_Write = false;
 const bool Instance_Write = false;
 const bool Part_Write = false;
 
+// Convert string to CadexFormat(UTF16String)
 cadex::Base_UTF16String StrToUTF(string str) {
 	wstring Cstr;
 	Cstr.resize(str.length());
 	for (int i = 0; i < str.length(); i++) {
 		Cstr[i] = static_cast<wchar_t>(str[i]);
 	}
-
 	Base_UTF16String res(Cstr);
-
 	return res;
 }
 
@@ -68,13 +67,11 @@ cadex::ModelData_SceneGraphElement ReadFromFile() {
 		if (Assamble_Write) cout << type << " " << name << " " << numberOfSubSGE << endl;
 		cadex::ModelData_Assembly thatAssamble(StrToUTF(name));
 		for (int i = 0; i < numberOfSubSGE; i++) {
-			cadex::ModelData_SceneGraphElement SGE = ReadFromFile();		
-			//cout << SGE.TypeId() << endl;
+			cadex::ModelData_SceneGraphElement SGE = ReadFromFile();
 			thatAssamble.AddInstance(SGE);
 			
 		}
-		// some code
-		// cout << name << ": " << thatAssamble.NumberOfInstances() << endl;
+
 		Result = thatAssamble;
 		
 		break;
@@ -85,8 +82,6 @@ cadex::ModelData_SceneGraphElement ReadFromFile() {
 		string instance = "Instance";
 		if (name == instance) name = ToString(Elem.Name().ToWString());
 		cadex::ModelData_Instance thatInstance(Elem,StrToUTF(name));	
-		// cout << Elem.TypeId() << endl;
-		// some code
 		Result = thatInstance;
 
 		break;

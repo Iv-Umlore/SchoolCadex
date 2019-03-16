@@ -2,6 +2,16 @@
 
 #include <cadex/STEP_Writer.hxx>
 #include <cadex/IFC_Reader.hxx>
+#include <cadex/IGES_Reader.hxx>
+#include <cadex/ACIS_Reader.hxx>
+#include <cadex/Para_Reader.hxx>
+#include <cadex/JT_Reader.hxx>
+#include <cadex/SLD_Reader.hxx>
+#include <cadex/Rhino_Reader.hxx>
+#include <cadex/OBJ_Reader.hxx>
+#include <cadex/STL_Reader.hxx>
+#include <cadex/VRML_Reader.hxx>
+#include <cadex/BRep_Reader.hxx>
 
 #include "MyVisitor.h"
 #include "cadex_license_4.cxx"
@@ -22,8 +32,19 @@ int main(int argc, char *argv[])
 	const char* aSource = argv[1];
 	ModelData_Model aModel;
 	cout << "Conversion started..." << endl;
-	IFC_Reader aReader;
-	//STEP_Reader aReader;
+	// 
+	IFC_Reader aReader;			// for *.ifc
+	// IGES_Reader aReader;		// for 	*.igs, *.iges
+	// STEP_Reader aReader;		// for *.stp, *.step
+	// ACIS_Reader aReader;		// for *.sat, *.sab
+	// Para_Reader aReader;		// for *.x_t, *.x_b, *.xmt_txt, *.xmt_bin, *.xmp_txt, *.xmp_bin
+	// JT_Reader aReader;		// for *.jt
+	// SLD_Reader aReader;		// for *.sldprt, *.sldasm
+	// Rhino_Reader aReader;	// for *.3dm
+	// OBJ_Reader aReader;		// for *.obj
+	// STL_Reader aReader;		// for *.stl
+	// VRML_Reader aReader;		// for *.wrl
+	// BRep_Reader aReader;		// for *.brep
 	bool flag1 = !aReader.ReadFile(aSource);
 	bool flag2 = !aReader.Transfer(aModel);
 	if (flag1 || flag2) {
@@ -38,7 +59,9 @@ int main(int argc, char *argv[])
 		cerr << "Sorry, open Error!" << endl;
 		return 1;
 	}
-	SingletonWriter* SWriter = SingletonWriter::Create();
+
+	SingletonWriter*
+	SWriter = SingletonWriter::Create();
 	SWriter->SetOstream(out);
 	
 	MyVisitor MyV;
@@ -55,7 +78,6 @@ int main(int argc, char *argv[])
 	while (anIterator.HasNext()) {
 		ModelData_SceneGraphElement& aSGE = anIterator.Next();
 		aSGE.Accept(MyV);
-		count++;
 	}
 	// close output file.
 	out.close();
@@ -66,10 +88,6 @@ int main(int argc, char *argv[])
 		cerr << "Sorry, open Error!" << endl;
 		return 1;
 	}
-	/*
-	cout << ModelData_Assembly::GetTypeId() << " - Assembly" << endl;
-	cout << ModelData_Instance::GetTypeId() << " - Instance" << endl;
-	cout << ModelData_Part::GetTypeId() << " - Part" << endl;*/
 
 	SingletonReader* SReader = SingletonReader::Create();
 	SReader->SetIfstream(in);
@@ -82,18 +100,11 @@ int main(int argc, char *argv[])
 		ModelData_SceneGraphElement resSGE = ReadFromFile();
 		resMod.AddRoot(resSGE);
 	}
-	/*
-	ModelData_Model::ElementIterator LastIterator(resMod);
-	while (LastIterator.HasNext()) {
-		cout << endl << endl << "Next Root:" << endl << endl;
-		ModelData_SceneGraphElement& aSGE = LastIterator.Next();
-		aSGE.Accept(TV);		
-	}
-	*/
+
 	// close input file.
 	in.close();
 
-	// запись в файл
+	// write in file
 	STEP_Writer STPWrite;
 	Base_UTF16String file("p\\result.stp");
 	if (!STPWrite.Transfer(resMod) || !STPWrite.WriteFile(file)) {
@@ -101,8 +112,6 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 	cout << "\nDone" << endl;
-
 	
-
 	return 0;
 };
