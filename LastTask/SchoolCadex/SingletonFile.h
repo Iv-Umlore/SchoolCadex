@@ -6,7 +6,6 @@ using namespace std;
 
 class SingletonWriter {
 private:
-	//static SingletonWriter *ptr;
 	std::ofstream* FOut;
 
 	SingletonWriter() {}
@@ -27,8 +26,7 @@ public:
 
 class SingletonReader {
 private:
-	//static SingletonWriter *ptr;
-	std::ifstream* FOut;
+	std::ifstream* FInput;
 
 	SingletonReader() {}
 public:
@@ -37,11 +35,11 @@ public:
 		return &instance;
 	}
 
-	void SetIfstream(std::ifstream & MyOut) {
-		FOut = &MyOut;
+	void SetIfstream(std::ifstream & MyInput) {
+		FInput = &MyInput;
 	}
 
 	std::ifstream& ReturnIfstream() {
-		return *FOut;
+		return *FInput;
 	}
 };

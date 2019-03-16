@@ -40,7 +40,6 @@ string ToString(wstring wstr) {
 	for (auto iterator = 0; iterator < wstr.length(); iterator++) {
 		if (static_cast<char>(wstr.at(iterator)) == ' ') result += '_';
 		else result += static_cast<char>(wstr.at(iterator));
-		// One of more problems
 	}
 	return result;
 }
@@ -49,11 +48,8 @@ string ToString(wstring wstr) {
 // 1 - Assamble, 2 - Instance, 3 - Part
 
 class MyVisitor : public ModelData_Model::ElementVisitor {
-private:
-	string str;
 public:
-	MyVisitor() {		
-		str = "";
+	MyVisitor() {	
 	}
 
 	void operator() (const ModelData_Part& thePart) {
@@ -81,7 +77,6 @@ public:
 		}
 		ofstream& out = SingletonWriter::Create()->ReturnOstream();
 		out << "1 " << name << " " << count << " ";
-		//cout << "1 " << name << " " << count << " ";
 		return true;
 	}
 	void VisitLeave(const ModelData_Assembly& theAssembly) {
@@ -94,9 +89,7 @@ public:
 		if (name.size() == 0) {
 			name = "Instance";
 		}
-
 		out << "2 "<< name << " 1 ";
-		cout << "2 " << name << " 1 ";
 		return true;
 	}
 	void VisitLeave(const ModelData_Instance& theInstance) {
@@ -104,6 +97,7 @@ public:
 	}
 };
 
+// need for test Model structure
 class TestVisitor : public ModelData_Model::ElementVisitor {
 public:
 	TestVisitor() {};
