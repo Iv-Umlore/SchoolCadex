@@ -57,11 +57,21 @@ public:
 
 	void operator() (const ModelData_Part& thePart) {
 		ofstream& out = SingletonWriter::Create()->ReturnOstream();
-		out << "3 " << ToString(thePart.Name().ToWString()) << " 0 ";
+		string name = ToString(thePart.Name().ToWString());
+		if (name.size() == 0) {
+			name = "part";
+		}
+		out << "3 " << name << " 0 ";
+		cout << "3 " << name << " 0 ";
 	}
 	 
 	bool VisitEnter(const ModelData_Assembly& theAssembly) {
 		int count = 0;
+
+		string name = ToString(theAssembly.Name().ToWString());
+		if (name.size() == 0) {
+			name = "Assembly";
+		}
 
 		ModelData_Model::ElementIterator EI(theAssembly);
 		while (EI.HasNext()) {
@@ -69,8 +79,8 @@ public:
 			count++;
 		}
 		ofstream& out = SingletonWriter::Create()->ReturnOstream();
-		out << "1 " << ToString(theAssembly.Name().ToWString()) << " " << count << " ";
-		
+		out << "1 " << name << " " << count << " ";
+		cout << "1 " << name << " " << count << " ";
 		return true;
 	}
 	void VisitLeave(const ModelData_Assembly& theAssembly) {
@@ -79,7 +89,7 @@ public:
 	bool VisitEnter(const ModelData_Instance& theInstance) {
 		ofstream& out = SingletonWriter::Create()->ReturnOstream();
 		out << "2 Instance 1 ";
-		
+		cout << "2 Instance 1 ";
 		return true;
 	}
 	void VisitLeave(const ModelData_Instance& theInstance) {

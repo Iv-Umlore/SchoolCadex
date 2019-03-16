@@ -1,6 +1,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 
 #include <cadex/STEP_Writer.hxx>
+#include <cadex/IFC_Reader.hxx>
 
 #include "MyVisitor.h"
 #include "cadex_license_4.cxx"
@@ -21,7 +22,8 @@ int main(int argc, char *argv[])
 	const char* aSource = argv[1];
 	ModelData_Model aModel;
 	cout << "Conversion started..." << endl;
-	STEP_Reader aReader;
+	IFC_Reader aReader;
+	// STEP_Reader aReader;
 	bool flag1 = !aReader.ReadFile(aSource);
 	bool flag2 = !aReader.Transfer(aModel);
 	if (flag1 || flag2) {
