@@ -26,6 +26,8 @@
 #include <cadex/ModelData_Assembly.hxx>
 #include <cadex/ModelData_Part.hxx>
 
+#include <cadex/ModelAlgo_TopoPrimitives.hxx>
+
 #include <iostream>
 #include "SingletonFile.h"
 #include "MyVisitor.h"
@@ -89,7 +91,11 @@ cadex::ModelData_SceneGraphElement ReadFromFile() {
 	}
 	case 3: {
 		if (Part_Write) cout << type << " " << name << " " << numberOfSubSGE << endl;
-		cadex::ModelData_Part thatPart(StrToUTF(name));
+
+		ModelAlgo_TopoPrimitives tmp;
+		ModelData_Solid MDS = tmp.CreateBox(1.0, 1.0, 1.0);
+		ModelData_BRepRepresentation BRep(MDS);
+		cadex::ModelData_Part thatPart(BRep,StrToUTF(name));
 
 		Result = thatPart;
 		break;
