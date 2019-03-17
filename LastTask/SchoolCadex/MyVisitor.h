@@ -59,7 +59,6 @@ public:
 			name = "part";
 		}
 		out << "3 " << name << " 0 ";
-		cout << "3 " << name << " 0 ";
 	}
 	 
 	bool VisitEnter(const ModelData_Assembly& theAssembly) {

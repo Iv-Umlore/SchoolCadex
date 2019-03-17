@@ -17,6 +17,22 @@
 #include "cadex_license_4.cxx"
 #include "Reader.h"
 
+Base_Reader GetReader(string extension) {
+	if (extension._Equal("ifc")) return IFC_Reader();
+	if (extension._Equal("igs") || extension._Equal("iges")) return IGES_Reader();
+	if (extension._Equal("stp") || extension._Equal("step")) return STEP_Reader();
+	if (extension._Equal("sab") || extension._Equal("sat")) return ACIS_Reader();
+	if (extension._Equal("jt")) return JT_Reader();
+	if (extension._Equal("sldprt") || extension._Equal("sldasm")) return SLD_Reader();
+	if (extension._Equal("3dm")) return Rhino_Reader();
+	if (extension._Equal("obj")) return OBJ_Reader();
+	if (extension._Equal("stl")) return STL_Reader();
+	if (extension._Equal("wrl")) return VRML_Reader();
+	if (extension._Equal("brep")) return BRep_Reader();
+	return Para_Reader();
+
+}
+
 int main(int argc, char *argv[])
 {
 	if (argc != 2) {
@@ -32,19 +48,24 @@ int main(int argc, char *argv[])
 	const char* aSource = argv[1];
 	ModelData_Model aModel;
 	cout << "Conversion started..." << endl;
-	// 
-	IFC_Reader aReader;			// for *.ifc
-	// IGES_Reader aReader;		// for 	*.igs, *.iges
-	// STEP_Reader aReader;		// for *.stp, *.step
-	// ACIS_Reader aReader;		// for *.sat, *.sab
-	// Para_Reader aReader;		// for *.x_t, *.x_b, *.xmt_txt, *.xmt_bin, *.xmp_txt, *.xmp_bin
-	// JT_Reader aReader;		// for *.jt
-	// SLD_Reader aReader;		// for *.sldprt, *.sldasm
-	// Rhino_Reader aReader;	// for *.3dm
-	// OBJ_Reader aReader;		// for *.obj
-	// STL_Reader aReader;		// for *.stl
-	// VRML_Reader aReader;		// for *.wrl
-	// BRep_Reader aReader;		// for *.brep
+
+	// Read file extension
+	string str = "";
+	int ComPosition = 0;
+	int iter = 0;
+	while ((aSource[iter] != '\n') && (aSource[iter] != '\0')) {
+		if (aSource[iter] == '.') ComPosition = iter;
+		iter++;
+	}
+
+	iter = ComPosition + 1;
+	while ((aSource[iter] != '\n') && (aSource[iter] != '\0')) {
+		str += aSource[iter];
+		iter++;
+	}
+
+	// Create reader
+	Base_Reader aReader = GetReader(str);
 	bool flag1 = !aReader.ReadFile(aSource);
 	bool flag2 = !aReader.Transfer(aModel);
 	if (flag1 || flag2) {
