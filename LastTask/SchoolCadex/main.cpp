@@ -81,8 +81,7 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 
-	SingletonWriter*
-	SWriter = SingletonWriter::Create();
+	SingletonWriter* SWriter = SingletonWriter::Create();
 	SWriter->SetOstream(out);
 	
 	MyVisitor MyV;
